@@ -128,9 +128,10 @@ set(BUILD_TYPE_DEBUG ${_BUILD_TYPE_DEBUG})
 
 ###############################################################################
 # C++ version configuration
-
+if (NOT EMSCRIPTEN)
 include(Compilers)
 include(CppVersion)
+endif()
 
 
 ###############################################################################
@@ -180,7 +181,13 @@ option(OCIO_USE_OIIO_FOR_APPS "Request OIIO to build apps (ociolutimage, ociocon
 
 
 if (NOT APPLE)
-    if ("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "(AMD64|IA64|EM64T|x86_64|X86|i386|i686)")
+    if (EMSCRIPTEN)
+        set(OCIO_ARCH_X86 0)
+        set(OCIO_BUILD_ENABLE_OPTIMIZATIONS_SSE OFF)
+        set(OCIO_BUILD_ENABLE_OPTIMIZATIONS_AVX OFF)
+        set(OCIO_BUILD_ENABLE_OPTIMIZATIONS_F16C OFF)
+        set(CMAKE_OSX_ARCHITECTURES EMSCRIPTEN)
+    elseif ("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "(AMD64|IA64|EM64T|X86|x86_64|i386|i686)")
         # Intel-based architecture (not APPLE)
         if ("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "(X86|i386|i686)")
             set(OCIO_ARCH_X86_32 1)
@@ -486,7 +493,7 @@ include(CMakePackageConfigHelpers)
 set(OCIO_TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets.cmake")
 set(OCIO_VERSION_CONFIG "${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake")
 set(OCIO_PROJECT_CONFIG "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake")
-set(OCIO_CONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
+set(OCIO_CONFIG_INSTALL_DIR "cmake")
 set(OCIO_CUSTOM_FIND_MODULE_DIR "${CMAKE_INSTALL_PREFIX}/share/OpenColorIO/cmake/modules")
 set(OCIO_CUSTOM_MACROS_MODULE_DIR "${CMAKE_INSTALL_PREFIX}/share/OpenColorIO/cmake/macros")
 

@@ -112,7 +112,7 @@ ocio_handle_dependency(  ZLIB REQUIRED ALLOW_INSTALL
 # https://github.com/zlib-ng/minizip-ng
 ocio_handle_dependency(  minizip-ng REQUIRED ALLOW_INSTALL
                          MIN_VERSION 3.0.6
-                         RECOMMENDED_VERSION 3.0.7
+                         RECOMMENDED_VERSION 4.0.7
                          RECOMMENDED_VERSION_REASON "Latest version tested with OCIO")
 
 ###############################################################################
